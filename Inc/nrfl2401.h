@@ -28,7 +28,7 @@
 
 // pins defines
 #define NRF_CE_PIN   GPIO_PIN_0
-#define NRF_CE_PORT  GPIOA
+#define NRF_CE_PORT  GPIOB
 #define NRF_CSN_PIN  GPIO_PIN_1
 #define NRF_CSN_PORT GPIOA
 #define NRF_IRQ_PIN  GPIO_PIN_2

@@ -13,7 +13,6 @@ void delay_us(uint32_t us) {
     }
 }
 
-// FUNÇÃO ÚNICA PARA GPIO - REMOVIDA A DUPLICAÇÃO
 void nrf_gpio_init(void){
     // Enable clocks
     RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
@@ -37,9 +36,9 @@ void nrf_gpio_init(void){
     GPIOA->CRL |= (GPIO_CRL_CNF6_0);
     
     // NRF24L01 control pins
-    // CE pin (PA0) - Output Push-Pull
-    GPIOA->CRL &= ~(0xF << (4 * 0));
-    GPIOA->CRL |= (0x3 << (4 * 0));
+    // CE pin (PB0) - Output Push-Pull
+    GPIOB->CRL &= ~(0xF << (4 * 0));
+    GPIOB->CRL |= (0x3 << (4 * 0));
     
     // CSN pin (PA1) - Output Push-Pull  
     GPIOA->CRL &= ~(0xF << (4 * 1));

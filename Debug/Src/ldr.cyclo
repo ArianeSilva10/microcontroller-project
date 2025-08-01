@@ -1,0 +1,3 @@
+../Src/ldr.c:3:6:ADC_init	3
+../Src/ldr.c:19:10:ADC_read	2
+../Src/ldr.c:26:6:LED_init	1

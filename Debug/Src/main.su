@@ -1,2 +1,11 @@
-../Src/main.c:11:6:LED_Init	4	static
-../Src/main.c:21:5:main	16	static
+../Src/main.c:8:6:SystemClock_Config	4	static
+../Src/main.c:28:6:led_init	4	static
+../Src/main.c:35:6:led_on	4	static
+../Src/main.c:40:6:led_off	4	static
+../Src/main.c:45:6:led_toggle	4	static
+../Src/main.c:51:9:nrf_test_connection	16	static
+../Src/main.c:63:6:test_transmitter	56	static
+../Src/main.c:107:6:test_receiver	48	static
+../Src/main.c:144:6:test_ping_pong	64	static
+../Src/main.c:221:6:nrf_diagnostic	80	static
+../Src/main.c:259:5:main	16	static
