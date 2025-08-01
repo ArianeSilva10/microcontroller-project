@@ -1,0 +1,1155 @@
+
+projeto_final.elf:     file format elf32-littlearm
+
+Sections:
+Idx Name          Size      VMA       LMA       File off  Algn
+  0 .isr_vector   00000130  08000000  08000000  00001000  2**0
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  1 .text         000006a0  08000130  08000130  00001130  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, CODE
+  2 .rodata       00000010  080007d0  080007d0  000017d0  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  3 .ARM.extab    00000000  080007e0  080007e0  000017e8  2**0
+                  CONTENTS, READONLY
+  4 .ARM          00000000  080007e0  080007e0  000017e8  2**0
+                  CONTENTS, READONLY
+  5 .preinit_array 00000000  080007e0  080007e8  000017e8  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  6 .init_array   00000004  080007e0  080007e0  000017e0  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  7 .fini_array   00000004  080007e4  080007e4  000017e4  2**2
+                  CONTENTS, ALLOC, LOAD, READONLY, DATA
+  8 .data         00000000  20000000  20000000  000017e8  2**0
+                  CONTENTS, ALLOC, LOAD, DATA
+  9 .bss          0000001c  20000000  080007e8  00002000  2**2
+                  ALLOC
+ 10 ._user_heap_stack 00000604  2000001c  080007e8  0000201c  2**0
+                  ALLOC
+ 11 .ARM.attributes 00000029  00000000  00000000  000017e8  2**0
+                  CONTENTS, READONLY
+ 12 .debug_info   000008e6  00000000  00000000  00001811  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 13 .debug_abbrev 0000033a  00000000  00000000  000020f7  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 14 .debug_aranges 00000100  00000000  00000000  00002438  2**3
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 15 .debug_rnglists 000000b5  00000000  00000000  00002538  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 16 .debug_macro  00010272  00000000  00000000  000025ed  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 17 .debug_line   00000ecb  00000000  00000000  0001285f  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 18 .debug_str    000549e8  00000000  00000000  0001372a  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 19 .comment      00000043  00000000  00000000  00068112  2**0
+                  CONTENTS, READONLY
+ 20 .debug_frame  0000033c  00000000  00000000  00068158  2**2
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+ 21 .debug_line_str 00000077  00000000  00000000  00068494  2**0
+                  CONTENTS, READONLY, DEBUGGING, OCTETS
+
+Disassembly of section .text:
+
+08000130 <__do_global_dtors_aux>:
+ 8000130:	b510      	push	{r4, lr}
+ 8000132:	4c05      	ldr	r4, [pc, #20]	@ (8000148 <__do_global_dtors_aux+0x18>)
+ 8000134:	7823      	ldrb	r3, [r4, #0]
+ 8000136:	b933      	cbnz	r3, 8000146 <__do_global_dtors_aux+0x16>
+ 8000138:	4b04      	ldr	r3, [pc, #16]	@ (800014c <__do_global_dtors_aux+0x1c>)
+ 800013a:	b113      	cbz	r3, 8000142 <__do_global_dtors_aux+0x12>
+ 800013c:	4804      	ldr	r0, [pc, #16]	@ (8000150 <__do_global_dtors_aux+0x20>)
+ 800013e:	f3af 8000 	nop.w
+ 8000142:	2301      	movs	r3, #1
+ 8000144:	7023      	strb	r3, [r4, #0]
+ 8000146:	bd10      	pop	{r4, pc}
+ 8000148:	20000000 	.word	0x20000000
+ 800014c:	00000000 	.word	0x00000000
+ 8000150:	080007b8 	.word	0x080007b8
+
+08000154 <frame_dummy>:
+ 8000154:	b508      	push	{r3, lr}
+ 8000156:	4b03      	ldr	r3, [pc, #12]	@ (8000164 <frame_dummy+0x10>)
+ 8000158:	b11b      	cbz	r3, 8000162 <frame_dummy+0xe>
+ 800015a:	4903      	ldr	r1, [pc, #12]	@ (8000168 <frame_dummy+0x14>)
+ 800015c:	4803      	ldr	r0, [pc, #12]	@ (800016c <frame_dummy+0x18>)
+ 800015e:	f3af 8000 	nop.w
+ 8000162:	bd08      	pop	{r3, pc}
+ 8000164:	00000000 	.word	0x00000000
+ 8000168:	20000004 	.word	0x20000004
+ 800016c:	080007b8 	.word	0x080007b8
+
+08000170 <LED_Init>:
+#define LED_PORT GPIOC
+#define LED_ON() LED_PORT->BSRR = (uint32_t)LED_PIN << 16
+#define LED_OFF() LED_PORT->BSRR = LED_PIN
+
+
+void LED_Init(void) {
+ 8000170:	b480      	push	{r7}
+ 8000172:	af00      	add	r7, sp, #0
+    // Habilita clock para GPIOC
+    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
+ 8000174:	4b0c      	ldr	r3, [pc, #48]	@ (80001a8 <LED_Init+0x38>)
+ 8000176:	699b      	ldr	r3, [r3, #24]
+ 8000178:	4a0b      	ldr	r2, [pc, #44]	@ (80001a8 <LED_Init+0x38>)
+ 800017a:	f043 0310 	orr.w	r3, r3, #16
+ 800017e:	6193      	str	r3, [r2, #24]
+
+    // Configura PC13 como saída push-pull (LED onboard)
+    GPIOC->CRH &= ~(0xF << (4 * (13 - 8)));
+ 8000180:	4b0a      	ldr	r3, [pc, #40]	@ (80001ac <LED_Init+0x3c>)
+ 8000182:	685b      	ldr	r3, [r3, #4]
+ 8000184:	4a09      	ldr	r2, [pc, #36]	@ (80001ac <LED_Init+0x3c>)
+ 8000186:	f423 0370 	bic.w	r3, r3, #15728640	@ 0xf00000
+ 800018a:	6053      	str	r3, [r2, #4]
+    GPIOC->CRH |= (0x3 << (4 * (13 - 8)));
+ 800018c:	4b07      	ldr	r3, [pc, #28]	@ (80001ac <LED_Init+0x3c>)
+ 800018e:	685b      	ldr	r3, [r3, #4]
+ 8000190:	4a06      	ldr	r2, [pc, #24]	@ (80001ac <LED_Init+0x3c>)
+ 8000192:	f443 1340 	orr.w	r3, r3, #3145728	@ 0x300000
+ 8000196:	6053      	str	r3, [r2, #4]
+    LED_OFF();
+ 8000198:	4b04      	ldr	r3, [pc, #16]	@ (80001ac <LED_Init+0x3c>)
+ 800019a:	f44f 5200 	mov.w	r2, #8192	@ 0x2000
+ 800019e:	611a      	str	r2, [r3, #16]
+}
+ 80001a0:	bf00      	nop
+ 80001a2:	46bd      	mov	sp, r7
+ 80001a4:	bc80      	pop	{r7}
+ 80001a6:	4770      	bx	lr
+ 80001a8:	40021000 	.word	0x40021000
+ 80001ac:	40011000 	.word	0x40011000
+
+080001b0 <main>:
+
+int main(void) {
+ 80001b0:	b580      	push	{r7, lr}
+ 80001b2:	b082      	sub	sp, #8
+ 80001b4:	af00      	add	r7, sp, #0
+    // Inicializa LED
+    LED_Init();
+ 80001b6:	f7ff ffdb 	bl	8000170 <LED_Init>
+
+    // Sinal de início (3 piscadas)
+    for(int i = 0; i < 3; i++) {
+ 80001ba:	2300      	movs	r3, #0
+ 80001bc:	607b      	str	r3, [r7, #4]
+ 80001be:	e010      	b.n	80001e2 <main+0x32>
+        LED_ON();
+ 80001c0:	4b21      	ldr	r3, [pc, #132]	@ (8000248 <main+0x98>)
+ 80001c2:	f04f 5200 	mov.w	r2, #536870912	@ 0x20000000
+ 80001c6:	611a      	str	r2, [r3, #16]
+        delay_ms(200);
+ 80001c8:	20c8      	movs	r0, #200	@ 0xc8
+ 80001ca:	f000 f83f 	bl	800024c <delay_ms>
+        LED_OFF();
+ 80001ce:	4b1e      	ldr	r3, [pc, #120]	@ (8000248 <main+0x98>)
+ 80001d0:	f44f 5200 	mov.w	r2, #8192	@ 0x2000
+ 80001d4:	611a      	str	r2, [r3, #16]
+        delay_ms(200);
+ 80001d6:	20c8      	movs	r0, #200	@ 0xc8
+ 80001d8:	f000 f838 	bl	800024c <delay_ms>
+    for(int i = 0; i < 3; i++) {
+ 80001dc:	687b      	ldr	r3, [r7, #4]
+ 80001de:	3301      	adds	r3, #1
+ 80001e0:	607b      	str	r3, [r7, #4]
+ 80001e2:	687b      	ldr	r3, [r7, #4]
+ 80001e4:	2b02      	cmp	r3, #2
+ 80001e6:	ddeb      	ble.n	80001c0 <main+0x10>
+    }
+
+    // Inicializa NRF24L01+ como transmissor
+    nrf_init(NRF_MODE_TX);
+ 80001e8:	2000      	movs	r0, #0
+ 80001ea:	f000 f963 	bl	80004b4 <nrf_init>
+
+    uint8_t counter = 0;
+ 80001ee:	2300      	movs	r3, #0
+ 80001f0:	70fb      	strb	r3, [r7, #3]
+    uint8_t data = 0;
+ 80001f2:	2300      	movs	r3, #0
+ 80001f4:	70bb      	strb	r3, [r7, #2]
+
+    while(1) {
+        // Prepara dado simples (contador de 0 a 255)
+        data = counter++;
+ 80001f6:	78fb      	ldrb	r3, [r7, #3]
+ 80001f8:	1c5a      	adds	r2, r3, #1
+ 80001fa:	70fa      	strb	r2, [r7, #3]
+ 80001fc:	70bb      	strb	r3, [r7, #2]
+
+        // Tenta transmitir
+        if(nrf_transmit(&data, 1)) {
+ 80001fe:	1cbb      	adds	r3, r7, #2
+ 8000200:	2101      	movs	r1, #1
+ 8000202:	4618      	mov	r0, r3
+ 8000204:	f000 f9e4 	bl	80005d0 <nrf_transmit>
+ 8000208:	4603      	mov	r3, r0
+ 800020a:	2b00      	cmp	r3, #0
+ 800020c:	d00b      	beq.n	8000226 <main+0x76>
+            // Sucesso: piscada rápida
+            LED_ON();
+ 800020e:	4b0e      	ldr	r3, [pc, #56]	@ (8000248 <main+0x98>)
+ 8000210:	f04f 5200 	mov.w	r2, #536870912	@ 0x20000000
+ 8000214:	611a      	str	r2, [r3, #16]
+            delay_ms(50);
+ 8000216:	2032      	movs	r0, #50	@ 0x32
+ 8000218:	f000 f818 	bl	800024c <delay_ms>
+            LED_OFF();
+ 800021c:	4b0a      	ldr	r3, [pc, #40]	@ (8000248 <main+0x98>)
+ 800021e:	f44f 5200 	mov.w	r2, #8192	@ 0x2000
+ 8000222:	611a      	str	r2, [r3, #16]
+ 8000224:	e00b      	b.n	800023e <main+0x8e>
+        } else {
+            // Falha: piscada longa
+            LED_ON();
+ 8000226:	4b08      	ldr	r3, [pc, #32]	@ (8000248 <main+0x98>)
+ 8000228:	f04f 5200 	mov.w	r2, #536870912	@ 0x20000000
+ 800022c:	611a      	str	r2, [r3, #16]
+            delay_ms(300);
+ 800022e:	f44f 7096 	mov.w	r0, #300	@ 0x12c
+ 8000232:	f000 f80b 	bl	800024c <delay_ms>
+            LED_OFF();
+ 8000236:	4b04      	ldr	r3, [pc, #16]	@ (8000248 <main+0x98>)
+ 8000238:	f44f 5200 	mov.w	r2, #8192	@ 0x2000
+ 800023c:	611a      	str	r2, [r3, #16]
+        }
+
+        // Intervalo entre transmissões
+        delay_ms(1000);
+ 800023e:	f44f 707a 	mov.w	r0, #1000	@ 0x3e8
+ 8000242:	f000 f803 	bl	800024c <delay_ms>
+        data = counter++;
+ 8000246:	e7d6      	b.n	80001f6 <main+0x46>
+ 8000248:	40011000 	.word	0x40011000
+
+0800024c <delay_ms>:
+#include "nrfl2401.h"
+
+// delays
+void delay_ms(uint32_t ms) {
+ 800024c:	b480      	push	{r7}
+ 800024e:	b085      	sub	sp, #20
+ 8000250:	af00      	add	r7, sp, #0
+ 8000252:	6078      	str	r0, [r7, #4]
+    for (uint32_t i = 0; i < ms; i++) {
+ 8000254:	2300      	movs	r3, #0
+ 8000256:	60fb      	str	r3, [r7, #12]
+ 8000258:	e00c      	b.n	8000274 <delay_ms+0x28>
+        for (volatile uint32_t j = 0; j < 8000; j++);
+ 800025a:	2300      	movs	r3, #0
+ 800025c:	60bb      	str	r3, [r7, #8]
+ 800025e:	e002      	b.n	8000266 <delay_ms+0x1a>
+ 8000260:	68bb      	ldr	r3, [r7, #8]
+ 8000262:	3301      	adds	r3, #1
+ 8000264:	60bb      	str	r3, [r7, #8]
+ 8000266:	68bb      	ldr	r3, [r7, #8]
+ 8000268:	f5b3 5ffa 	cmp.w	r3, #8000	@ 0x1f40
+ 800026c:	d3f8      	bcc.n	8000260 <delay_ms+0x14>
+    for (uint32_t i = 0; i < ms; i++) {
+ 800026e:	68fb      	ldr	r3, [r7, #12]
+ 8000270:	3301      	adds	r3, #1
+ 8000272:	60fb      	str	r3, [r7, #12]
+ 8000274:	68fa      	ldr	r2, [r7, #12]
+ 8000276:	687b      	ldr	r3, [r7, #4]
+ 8000278:	429a      	cmp	r2, r3
+ 800027a:	d3ee      	bcc.n	800025a <delay_ms+0xe>
+    }
+}
+ 800027c:	bf00      	nop
+ 800027e:	bf00      	nop
+ 8000280:	3714      	adds	r7, #20
+ 8000282:	46bd      	mov	sp, r7
+ 8000284:	bc80      	pop	{r7}
+ 8000286:	4770      	bx	lr
+
+08000288 <delay_us>:
+
+void delay_us(uint32_t us) {
+ 8000288:	b480      	push	{r7}
+ 800028a:	b085      	sub	sp, #20
+ 800028c:	af00      	add	r7, sp, #0
+ 800028e:	6078      	str	r0, [r7, #4]
+    for (uint32_t i = 0; i < us; i++) {
+ 8000290:	2300      	movs	r3, #0
+ 8000292:	60fb      	str	r3, [r7, #12]
+ 8000294:	e00b      	b.n	80002ae <delay_us+0x26>
+        for (volatile uint32_t j = 0; j < 8; j++);
+ 8000296:	2300      	movs	r3, #0
+ 8000298:	60bb      	str	r3, [r7, #8]
+ 800029a:	e002      	b.n	80002a2 <delay_us+0x1a>
+ 800029c:	68bb      	ldr	r3, [r7, #8]
+ 800029e:	3301      	adds	r3, #1
+ 80002a0:	60bb      	str	r3, [r7, #8]
+ 80002a2:	68bb      	ldr	r3, [r7, #8]
+ 80002a4:	2b07      	cmp	r3, #7
+ 80002a6:	d9f9      	bls.n	800029c <delay_us+0x14>
+    for (uint32_t i = 0; i < us; i++) {
+ 80002a8:	68fb      	ldr	r3, [r7, #12]
+ 80002aa:	3301      	adds	r3, #1
+ 80002ac:	60fb      	str	r3, [r7, #12]
+ 80002ae:	68fa      	ldr	r2, [r7, #12]
+ 80002b0:	687b      	ldr	r3, [r7, #4]
+ 80002b2:	429a      	cmp	r2, r3
+ 80002b4:	d3ef      	bcc.n	8000296 <delay_us+0xe>
+    }
+}
+ 80002b6:	bf00      	nop
+ 80002b8:	bf00      	nop
+ 80002ba:	3714      	adds	r7, #20
+ 80002bc:	46bd      	mov	sp, r7
+ 80002be:	bc80      	pop	{r7}
+ 80002c0:	4770      	bx	lr
+	...
+
+080002c4 <nrf_gpio_init>:
+
+
+// init gpio pins 
+void nrf_gpio_init(void){
+ 80002c4:	b480      	push	{r7}
+ 80002c6:	af00      	add	r7, sp, #0
+    // enable clock for GPIOA
+    RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
+ 80002c8:	4b1c      	ldr	r3, [pc, #112]	@ (800033c <nrf_gpio_init+0x78>)
+ 80002ca:	699b      	ldr	r3, [r3, #24]
+ 80002cc:	4a1b      	ldr	r2, [pc, #108]	@ (800033c <nrf_gpio_init+0x78>)
+ 80002ce:	f043 0304 	orr.w	r3, r3, #4
+ 80002d2:	6193      	str	r3, [r2, #24]
+    
+    // configure ce pin as output push-pull (max speed 50MHz)
+    NRF_CE_PORT->CRL &= ~(0xF << (4 * 0));
+ 80002d4:	4b1a      	ldr	r3, [pc, #104]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 80002d6:	681b      	ldr	r3, [r3, #0]
+ 80002d8:	4a19      	ldr	r2, [pc, #100]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 80002da:	f023 030f 	bic.w	r3, r3, #15
+ 80002de:	6013      	str	r3, [r2, #0]
+    NRF_CE_PORT->CRL |= (0x3 << (4 * 0));
+ 80002e0:	4b17      	ldr	r3, [pc, #92]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 80002e2:	681b      	ldr	r3, [r3, #0]
+ 80002e4:	4a16      	ldr	r2, [pc, #88]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 80002e6:	f043 0303 	orr.w	r3, r3, #3
+ 80002ea:	6013      	str	r3, [r2, #0]
+    
+    // configure csn pin as output push-pull
+    NRF_CSN_PORT->CRL &= ~(0xF << (4 * 1));
+ 80002ec:	4b14      	ldr	r3, [pc, #80]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 80002ee:	681b      	ldr	r3, [r3, #0]
+ 80002f0:	4a13      	ldr	r2, [pc, #76]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 80002f2:	f023 03f0 	bic.w	r3, r3, #240	@ 0xf0
+ 80002f6:	6013      	str	r3, [r2, #0]
+    NRF_CSN_PORT->CRL |= (0x3 << (4 * 1));
+ 80002f8:	4b11      	ldr	r3, [pc, #68]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 80002fa:	681b      	ldr	r3, [r3, #0]
+ 80002fc:	4a10      	ldr	r2, [pc, #64]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 80002fe:	f043 0330 	orr.w	r3, r3, #48	@ 0x30
+ 8000302:	6013      	str	r3, [r2, #0]
+    
+    // configure irq pin as input pull-up
+    NRF_IRQ_PORT->CRL &= ~(0xF << (4 * 2));
+ 8000304:	4b0e      	ldr	r3, [pc, #56]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 8000306:	681b      	ldr	r3, [r3, #0]
+ 8000308:	4a0d      	ldr	r2, [pc, #52]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 800030a:	f423 6370 	bic.w	r3, r3, #3840	@ 0xf00
+ 800030e:	6013      	str	r3, [r2, #0]
+    NRF_IRQ_PORT->CRL |= (0x8 << (4 * 2));
+ 8000310:	4b0b      	ldr	r3, [pc, #44]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 8000312:	681b      	ldr	r3, [r3, #0]
+ 8000314:	4a0a      	ldr	r2, [pc, #40]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 8000316:	f443 6300 	orr.w	r3, r3, #2048	@ 0x800
+ 800031a:	6013      	str	r3, [r2, #0]
+    NRF_IRQ_PORT->ODR |= NRF_IRQ_PIN;
+ 800031c:	4b08      	ldr	r3, [pc, #32]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 800031e:	68db      	ldr	r3, [r3, #12]
+ 8000320:	4a07      	ldr	r2, [pc, #28]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 8000322:	f043 0304 	orr.w	r3, r3, #4
+ 8000326:	60d3      	str	r3, [r2, #12]
+    
+    // initial states
+    NRF_CSN_PORT->BSRR = NRF_CSN_PIN; // csn high, chip not select
+ 8000328:	4b05      	ldr	r3, [pc, #20]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 800032a:	2202      	movs	r2, #2
+ 800032c:	611a      	str	r2, [r3, #16]
+    NRF_CE_PORT->BRR = NRF_CE_PIN;    // ce low, chip enable
+ 800032e:	4b04      	ldr	r3, [pc, #16]	@ (8000340 <nrf_gpio_init+0x7c>)
+ 8000330:	2201      	movs	r2, #1
+ 8000332:	615a      	str	r2, [r3, #20]
+}
+ 8000334:	bf00      	nop
+ 8000336:	46bd      	mov	sp, r7
+ 8000338:	bc80      	pop	{r7}
+ 800033a:	4770      	bx	lr
+ 800033c:	40021000 	.word	0x40021000
+ 8000340:	40010800 	.word	0x40010800
+
+08000344 <spi_init>:
+
+// init spi
+void spi_init(void){
+ 8000344:	b480      	push	{r7}
+ 8000346:	af00      	add	r7, sp, #0
+    // enable SPI1 clock
+    RCC->APB2ENR |= RCC_APB2ENR_SPI1EN;
+ 8000348:	4b0f      	ldr	r3, [pc, #60]	@ (8000388 <spi_init+0x44>)
+ 800034a:	699b      	ldr	r3, [r3, #24]
+ 800034c:	4a0e      	ldr	r2, [pc, #56]	@ (8000388 <spi_init+0x44>)
+ 800034e:	f443 5380 	orr.w	r3, r3, #4096	@ 0x1000
+ 8000352:	6193      	str	r3, [r2, #24]
+    
+    // configure SPI1 pins (PA5-SCK, PA6-MISO, PA7-MOSI)
+    GPIOA->CRL &= ~(0xFFF << (4 * 5));
+ 8000354:	4b0d      	ldr	r3, [pc, #52]	@ (800038c <spi_init+0x48>)
+ 8000356:	681b      	ldr	r3, [r3, #0]
+ 8000358:	4a0c      	ldr	r2, [pc, #48]	@ (800038c <spi_init+0x48>)
+ 800035a:	f3c3 0313 	ubfx	r3, r3, #0, #20
+ 800035e:	6013      	str	r3, [r2, #0]
+    GPIOA->CRL |= (0xB << (4 * 5)) | (0xB << (4 * 6)) | (0xB << (4 * 7));
+ 8000360:	4b0a      	ldr	r3, [pc, #40]	@ (800038c <spi_init+0x48>)
+ 8000362:	681b      	ldr	r3, [r3, #0]
+ 8000364:	4a09      	ldr	r2, [pc, #36]	@ (800038c <spi_init+0x48>)
+ 8000366:	f043 433b 	orr.w	r3, r3, #3137339392	@ 0xbb000000
+ 800036a:	f443 0330 	orr.w	r3, r3, #11534336	@ 0xb00000
+ 800036e:	6013      	str	r3, [r2, #0]
+    
+    // SPI configuration
+    SPI1->CR1 = SPI_CR1_MSTR |          // master mode
+ 8000370:	4b07      	ldr	r3, [pc, #28]	@ (8000390 <spi_init+0x4c>)
+ 8000372:	f44f 7253 	mov.w	r2, #844	@ 0x34c
+ 8000376:	601a      	str	r2, [r3, #0]
+                SPI_CR1_BR_0 |          // baud rate control (fPCLK/8)
+                SPI_CR1_SSM |           // software slave management
+                SPI_CR1_SSI |           // internal slave select
+                SPI_CR1_SPE;            // enable SPI
+    
+    SPI1->CR2 = 0;
+ 8000378:	4b05      	ldr	r3, [pc, #20]	@ (8000390 <spi_init+0x4c>)
+ 800037a:	2200      	movs	r2, #0
+ 800037c:	605a      	str	r2, [r3, #4]
+}
+ 800037e:	bf00      	nop
+ 8000380:	46bd      	mov	sp, r7
+ 8000382:	bc80      	pop	{r7}
+ 8000384:	4770      	bx	lr
+ 8000386:	bf00      	nop
+ 8000388:	40021000 	.word	0x40021000
+ 800038c:	40010800 	.word	0x40010800
+ 8000390:	40013000 	.word	0x40013000
+
+08000394 <spi_transfer>:
+
+// basic spi transfer 
+uint8_t spi_transfer(uint8_t data){
+ 8000394:	b480      	push	{r7}
+ 8000396:	b083      	sub	sp, #12
+ 8000398:	af00      	add	r7, sp, #0
+ 800039a:	4603      	mov	r3, r0
+ 800039c:	71fb      	strb	r3, [r7, #7]
+    while (!(SPI1->SR & SPI_SR_TXE));   // wait for TX buffer empty  transmiter
+ 800039e:	bf00      	nop
+ 80003a0:	4b0b      	ldr	r3, [pc, #44]	@ (80003d0 <spi_transfer+0x3c>)
+ 80003a2:	689b      	ldr	r3, [r3, #8]
+ 80003a4:	f003 0302 	and.w	r3, r3, #2
+ 80003a8:	2b00      	cmp	r3, #0
+ 80003aa:	d0f9      	beq.n	80003a0 <spi_transfer+0xc>
+    SPI1->DR = data;
+ 80003ac:	4a08      	ldr	r2, [pc, #32]	@ (80003d0 <spi_transfer+0x3c>)
+ 80003ae:	79fb      	ldrb	r3, [r7, #7]
+ 80003b0:	60d3      	str	r3, [r2, #12]
+    
+    while (!(SPI1->SR & SPI_SR_RXNE));  // wait for RX buffer not empty read
+ 80003b2:	bf00      	nop
+ 80003b4:	4b06      	ldr	r3, [pc, #24]	@ (80003d0 <spi_transfer+0x3c>)
+ 80003b6:	689b      	ldr	r3, [r3, #8]
+ 80003b8:	f003 0301 	and.w	r3, r3, #1
+ 80003bc:	2b00      	cmp	r3, #0
+ 80003be:	d0f9      	beq.n	80003b4 <spi_transfer+0x20>
+    return SPI1->DR;
+ 80003c0:	4b03      	ldr	r3, [pc, #12]	@ (80003d0 <spi_transfer+0x3c>)
+ 80003c2:	68db      	ldr	r3, [r3, #12]
+ 80003c4:	b2db      	uxtb	r3, r3
+}
+ 80003c6:	4618      	mov	r0, r3
+ 80003c8:	370c      	adds	r7, #12
+ 80003ca:	46bd      	mov	sp, r7
+ 80003cc:	bc80      	pop	{r7}
+ 80003ce:	4770      	bx	lr
+ 80003d0:	40013000 	.word	0x40013000
+
+080003d4 <nrf_write_reg>:
+
+// write in registrs
+void nrf_write_reg(uint8_t reg, uint8_t value){
+ 80003d4:	b580      	push	{r7, lr}
+ 80003d6:	b082      	sub	sp, #8
+ 80003d8:	af00      	add	r7, sp, #0
+ 80003da:	4603      	mov	r3, r0
+ 80003dc:	460a      	mov	r2, r1
+ 80003de:	71fb      	strb	r3, [r7, #7]
+ 80003e0:	4613      	mov	r3, r2
+ 80003e2:	71bb      	strb	r3, [r7, #6]
+    NRF_CSN_PORT->BRR = NRF_CSN_PIN; // CSN low
+ 80003e4:	4b0b      	ldr	r3, [pc, #44]	@ (8000414 <nrf_write_reg+0x40>)
+ 80003e6:	2202      	movs	r2, #2
+ 80003e8:	615a      	str	r2, [r3, #20]
+    
+    spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
+ 80003ea:	79fb      	ldrb	r3, [r7, #7]
+ 80003ec:	f003 031f 	and.w	r3, r3, #31
+ 80003f0:	b2db      	uxtb	r3, r3
+ 80003f2:	f043 0320 	orr.w	r3, r3, #32
+ 80003f6:	b2db      	uxtb	r3, r3
+ 80003f8:	4618      	mov	r0, r3
+ 80003fa:	f7ff ffcb 	bl	8000394 <spi_transfer>
+    spi_transfer(value);
+ 80003fe:	79bb      	ldrb	r3, [r7, #6]
+ 8000400:	4618      	mov	r0, r3
+ 8000402:	f7ff ffc7 	bl	8000394 <spi_transfer>
+    
+    NRF_CSN_PORT->BSRR = NRF_CSN_PIN; // CSN high 
+ 8000406:	4b03      	ldr	r3, [pc, #12]	@ (8000414 <nrf_write_reg+0x40>)
+ 8000408:	2202      	movs	r2, #2
+ 800040a:	611a      	str	r2, [r3, #16]
+}
+ 800040c:	bf00      	nop
+ 800040e:	3708      	adds	r7, #8
+ 8000410:	46bd      	mov	sp, r7
+ 8000412:	bd80      	pop	{r7, pc}
+ 8000414:	40010800 	.word	0x40010800
+
+08000418 <nrf_read_reg>:
+
+// read registers
+uint8_t nrf_read_reg(uint8_t reg){
+ 8000418:	b580      	push	{r7, lr}
+ 800041a:	b084      	sub	sp, #16
+ 800041c:	af00      	add	r7, sp, #0
+ 800041e:	4603      	mov	r3, r0
+ 8000420:	71fb      	strb	r3, [r7, #7]
+    NRF_CSN_PORT->BRR = NRF_CSN_PIN; // CSN low
+ 8000422:	4b0b      	ldr	r3, [pc, #44]	@ (8000450 <nrf_read_reg+0x38>)
+ 8000424:	2202      	movs	r2, #2
+ 8000426:	615a      	str	r2, [r3, #20]
+    
+    spi_transfer(R_REGISTER | (REGISTER_MASK & reg));
+ 8000428:	79fb      	ldrb	r3, [r7, #7]
+ 800042a:	f003 031f 	and.w	r3, r3, #31
+ 800042e:	b2db      	uxtb	r3, r3
+ 8000430:	4618      	mov	r0, r3
+ 8000432:	f7ff ffaf 	bl	8000394 <spi_transfer>
+    uint8_t value = spi_transfer(0xFF);
+ 8000436:	20ff      	movs	r0, #255	@ 0xff
+ 8000438:	f7ff ffac 	bl	8000394 <spi_transfer>
+ 800043c:	4603      	mov	r3, r0
+ 800043e:	73fb      	strb	r3, [r7, #15]
+    
+    NRF_CSN_PORT->BSRR = NRF_CSN_PIN; // CSN high
+ 8000440:	4b03      	ldr	r3, [pc, #12]	@ (8000450 <nrf_read_reg+0x38>)
+ 8000442:	2202      	movs	r2, #2
+ 8000444:	611a      	str	r2, [r3, #16]
+    
+    return value;
+ 8000446:	7bfb      	ldrb	r3, [r7, #15]
+}
+ 8000448:	4618      	mov	r0, r3
+ 800044a:	3710      	adds	r7, #16
+ 800044c:	46bd      	mov	sp, r7
+ 800044e:	bd80      	pop	{r7, pc}
+ 8000450:	40010800 	.word	0x40010800
+
+08000454 <nrf_write_buf>:
+
+// buffer write
+void nrf_write_buf(uint8_t reg, uint8_t *buf, uint8_t len){
+ 8000454:	b580      	push	{r7, lr}
+ 8000456:	b084      	sub	sp, #16
+ 8000458:	af00      	add	r7, sp, #0
+ 800045a:	4603      	mov	r3, r0
+ 800045c:	6039      	str	r1, [r7, #0]
+ 800045e:	71fb      	strb	r3, [r7, #7]
+ 8000460:	4613      	mov	r3, r2
+ 8000462:	71bb      	strb	r3, [r7, #6]
+    NRF_CSN_PORT->BRR = NRF_CSN_PIN; // CSN low
+ 8000464:	4b12      	ldr	r3, [pc, #72]	@ (80004b0 <nrf_write_buf+0x5c>)
+ 8000466:	2202      	movs	r2, #2
+ 8000468:	615a      	str	r2, [r3, #20]
+    
+    spi_transfer(W_REGISTER | (REGISTER_MASK & reg));
+ 800046a:	79fb      	ldrb	r3, [r7, #7]
+ 800046c:	f003 031f 	and.w	r3, r3, #31
+ 8000470:	b2db      	uxtb	r3, r3
+ 8000472:	f043 0320 	orr.w	r3, r3, #32
+ 8000476:	b2db      	uxtb	r3, r3
+ 8000478:	4618      	mov	r0, r3
+ 800047a:	f7ff ff8b 	bl	8000394 <spi_transfer>
+    for (uint8_t i = 0; i < len; i++) {
+ 800047e:	2300      	movs	r3, #0
+ 8000480:	73fb      	strb	r3, [r7, #15]
+ 8000482:	e009      	b.n	8000498 <nrf_write_buf+0x44>
+        spi_transfer(buf[i]);
+ 8000484:	7bfb      	ldrb	r3, [r7, #15]
+ 8000486:	683a      	ldr	r2, [r7, #0]
+ 8000488:	4413      	add	r3, r2
+ 800048a:	781b      	ldrb	r3, [r3, #0]
+ 800048c:	4618      	mov	r0, r3
+ 800048e:	f7ff ff81 	bl	8000394 <spi_transfer>
+    for (uint8_t i = 0; i < len; i++) {
+ 8000492:	7bfb      	ldrb	r3, [r7, #15]
+ 8000494:	3301      	adds	r3, #1
+ 8000496:	73fb      	strb	r3, [r7, #15]
+ 8000498:	7bfa      	ldrb	r2, [r7, #15]
+ 800049a:	79bb      	ldrb	r3, [r7, #6]
+ 800049c:	429a      	cmp	r2, r3
+ 800049e:	d3f1      	bcc.n	8000484 <nrf_write_buf+0x30>
+    }
+    
+    NRF_CSN_PORT->BSRR = NRF_CSN_PIN; // CSN high
+ 80004a0:	4b03      	ldr	r3, [pc, #12]	@ (80004b0 <nrf_write_buf+0x5c>)
+ 80004a2:	2202      	movs	r2, #2
+ 80004a4:	611a      	str	r2, [r3, #16]
+}
+ 80004a6:	bf00      	nop
+ 80004a8:	3710      	adds	r7, #16
+ 80004aa:	46bd      	mov	sp, r7
+ 80004ac:	bd80      	pop	{r7, pc}
+ 80004ae:	bf00      	nop
+ 80004b0:	40010800 	.word	0x40010800
+
+080004b4 <nrf_init>:
+    NRF_CSN_PORT->BSRR = NRF_CSN_PIN; // CSN high
+}
+
+
+// init module
+void nrf_init(uint8_t mode){
+ 80004b4:	b580      	push	{r7, lr}
+ 80004b6:	b086      	sub	sp, #24
+ 80004b8:	af00      	add	r7, sp, #0
+ 80004ba:	4603      	mov	r3, r0
+ 80004bc:	71fb      	strb	r3, [r7, #7]
+    nrf_gpio_init();
+ 80004be:	f7ff ff01 	bl	80002c4 <nrf_gpio_init>
+    spi_init();
+ 80004c2:	f7ff ff3f 	bl	8000344 <spi_init>
+    
+    // power down and wait
+    nrf_write_reg(CONFIG, 0);
+ 80004c6:	2100      	movs	r1, #0
+ 80004c8:	2000      	movs	r0, #0
+ 80004ca:	f7ff ff83 	bl	80003d4 <nrf_write_reg>
+    delay_ms(5);
+ 80004ce:	2005      	movs	r0, #5
+ 80004d0:	f7ff febc 	bl	800024c <delay_ms>
+    
+    // setup from nucleo
+    nrf_write_reg(EN_AA, ENAA_P0);       // Auto-ACK no pipe 0
+ 80004d4:	2101      	movs	r1, #1
+ 80004d6:	2001      	movs	r0, #1
+ 80004d8:	f7ff ff7c 	bl	80003d4 <nrf_write_reg>
+    nrf_write_reg(EN_RXADDR, ERX_P0);    // enable pipe 0
+ 80004dc:	2101      	movs	r1, #1
+ 80004de:	2002      	movs	r0, #2
+ 80004e0:	f7ff ff78 	bl	80003d4 <nrf_write_reg>
+    nrf_write_reg(SETUP_AW, AW_5BYTES);  // 5 bytes address
+ 80004e4:	2103      	movs	r1, #3
+ 80004e6:	2003      	movs	r0, #3
+ 80004e8:	f7ff ff74 	bl	80003d4 <nrf_write_reg>
+    nrf_write_reg(SETUP_RETR, (ARD_250US<<4) | ARC_15RET); // retransmission
+ 80004ec:	210f      	movs	r1, #15
+ 80004ee:	2004      	movs	r0, #4
+ 80004f0:	f7ff ff70 	bl	80003d4 <nrf_write_reg>
+    nrf_write_reg(RF_CH, RF_CH_10);      // chanel 10 (2.410GHz)
+ 80004f4:	210a      	movs	r1, #10
+ 80004f6:	2005      	movs	r0, #5
+ 80004f8:	f7ff ff6c 	bl	80003d4 <nrf_write_reg>
+    nrf_write_reg(RF_SETUP, RF_DR_2MBPS | RF_PWR_0DBM); // 2Mbps, 0dBm
+ 80004fc:	210e      	movs	r1, #14
+ 80004fe:	2006      	movs	r0, #6
+ 8000500:	f7ff ff68 	bl	80003d4 <nrf_write_reg>
+    
+    // enable CRC (2 bytes)
+    uint8_t config = nrf_read_reg(CONFIG);
+ 8000504:	2000      	movs	r0, #0
+ 8000506:	f7ff ff87 	bl	8000418 <nrf_read_reg>
+ 800050a:	4603      	mov	r3, r0
+ 800050c:	75fb      	strb	r3, [r7, #23]
+    config |= (1<<EN_CRC) | (1<<CRCO);
+ 800050e:	f997 3017 	ldrsb.w	r3, [r7, #23]
+ 8000512:	f043 0310 	orr.w	r3, r3, #16
+ 8000516:	b25b      	sxtb	r3, r3
+ 8000518:	75fb      	strb	r3, [r7, #23]
+    nrf_write_reg(CONFIG, config);
+ 800051a:	7dfb      	ldrb	r3, [r7, #23]
+ 800051c:	4619      	mov	r1, r3
+ 800051e:	2000      	movs	r0, #0
+ 8000520:	f7ff ff58 	bl	80003d4 <nrf_write_reg>
+    
+    // address default (pode ser alterado depois)
+    uint8_t tx_addr[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
+ 8000524:	4a27      	ldr	r2, [pc, #156]	@ (80005c4 <nrf_init+0x110>)
+ 8000526:	f107 0310 	add.w	r3, r7, #16
+ 800052a:	e892 0003 	ldmia.w	r2, {r0, r1}
+ 800052e:	6018      	str	r0, [r3, #0]
+ 8000530:	3304      	adds	r3, #4
+ 8000532:	7019      	strb	r1, [r3, #0]
+    uint8_t rx_addr[5] = {0xD7, 0xD7, 0xD7, 0xD7, 0xD7};
+ 8000534:	4a24      	ldr	r2, [pc, #144]	@ (80005c8 <nrf_init+0x114>)
+ 8000536:	f107 0308 	add.w	r3, r7, #8
+ 800053a:	e892 0003 	ldmia.w	r2, {r0, r1}
+ 800053e:	6018      	str	r0, [r3, #0]
+ 8000540:	3304      	adds	r3, #4
+ 8000542:	7019      	strb	r1, [r3, #0]
+    
+    nrf_set_tx_addr(tx_addr, 5);
+ 8000544:	f107 0310 	add.w	r3, r7, #16
+ 8000548:	2105      	movs	r1, #5
+ 800054a:	4618      	mov	r0, r3
+ 800054c:	f000 f8ac 	bl	80006a8 <nrf_set_tx_addr>
+    nrf_set_rx_addr(0, rx_addr, 5);
+ 8000550:	f107 0308 	add.w	r3, r7, #8
+ 8000554:	2205      	movs	r2, #5
+ 8000556:	4619      	mov	r1, r3
+ 8000558:	2000      	movs	r0, #0
+ 800055a:	f000 f8b5 	bl	80006c8 <nrf_set_rx_addr>
+    
+    // lenght do payload
+    nrf_write_reg(RX_PW_P0, 32);
+ 800055e:	2120      	movs	r1, #32
+ 8000560:	2011      	movs	r0, #17
+ 8000562:	f7ff ff37 	bl	80003d4 <nrf_write_reg>
+    
+    // enable features
+    nrf_write_reg(FEATURE, EN_DPL | EN_ACK_PAY);
+ 8000566:	2106      	movs	r1, #6
+ 8000568:	201d      	movs	r0, #29
+ 800056a:	f7ff ff33 	bl	80003d4 <nrf_write_reg>
+    nrf_write_reg(DYNPD, (1<<DPL_P0));
+ 800056e:	2102      	movs	r1, #2
+ 8000570:	201c      	movs	r0, #28
+ 8000572:	f7ff ff2f 	bl	80003d4 <nrf_write_reg>
+    
+    // clear FIFOs e status
+    nrf_write_reg(FLUSH_TX, 0xFF);
+ 8000576:	21ff      	movs	r1, #255	@ 0xff
+ 8000578:	20e1      	movs	r0, #225	@ 0xe1
+ 800057a:	f7ff ff2b 	bl	80003d4 <nrf_write_reg>
+    nrf_write_reg(FLUSH_RX, 0xFF);
+ 800057e:	21ff      	movs	r1, #255	@ 0xff
+ 8000580:	20e2      	movs	r0, #226	@ 0xe2
+ 8000582:	f7ff ff27 	bl	80003d4 <nrf_write_reg>
+    nrf_write_reg(STATUS, RX_DR | TX_DS | MAX_RT);
+ 8000586:	2170      	movs	r1, #112	@ 0x70
+ 8000588:	2007      	movs	r0, #7
+ 800058a:	f7ff ff23 	bl	80003d4 <nrf_write_reg>
+    
+    // setup mode
+    if (mode == NRF_MODE_TX) {
+ 800058e:	79fb      	ldrb	r3, [r7, #7]
+ 8000590:	2b00      	cmp	r3, #0
+ 8000592:	d108      	bne.n	80005a6 <nrf_init+0xf2>
+        nrf_write_reg(CONFIG, config | PWR_UP);
+ 8000594:	7dfb      	ldrb	r3, [r7, #23]
+ 8000596:	f043 0302 	orr.w	r3, r3, #2
+ 800059a:	b2db      	uxtb	r3, r3
+ 800059c:	4619      	mov	r1, r3
+ 800059e:	2000      	movs	r0, #0
+ 80005a0:	f7ff ff18 	bl	80003d4 <nrf_write_reg>
+    } else {
+        nrf_write_reg(CONFIG, config | PWR_UP | PRIM_RX);
+        NRF_CE_PORT->BSRR = NRF_CE_PIN; // start receive
+    }
+}
+ 80005a4:	e00a      	b.n	80005bc <nrf_init+0x108>
+        nrf_write_reg(CONFIG, config | PWR_UP | PRIM_RX);
+ 80005a6:	7dfb      	ldrb	r3, [r7, #23]
+ 80005a8:	f043 0303 	orr.w	r3, r3, #3
+ 80005ac:	b2db      	uxtb	r3, r3
+ 80005ae:	4619      	mov	r1, r3
+ 80005b0:	2000      	movs	r0, #0
+ 80005b2:	f7ff ff0f 	bl	80003d4 <nrf_write_reg>
+        NRF_CE_PORT->BSRR = NRF_CE_PIN; // start receive
+ 80005b6:	4b05      	ldr	r3, [pc, #20]	@ (80005cc <nrf_init+0x118>)
+ 80005b8:	2201      	movs	r2, #1
+ 80005ba:	611a      	str	r2, [r3, #16]
+}
+ 80005bc:	bf00      	nop
+ 80005be:	3718      	adds	r7, #24
+ 80005c0:	46bd      	mov	sp, r7
+ 80005c2:	bd80      	pop	{r7, pc}
+ 80005c4:	080007d0 	.word	0x080007d0
+ 80005c8:	080007d8 	.word	0x080007d8
+ 80005cc:	40010800 	.word	0x40010800
+
+080005d0 <nrf_transmit>:
+
+// data transfer
+uint8_t nrf_transmit(uint8_t *data, uint8_t len){
+ 80005d0:	b580      	push	{r7, lr}
+ 80005d2:	b086      	sub	sp, #24
+ 80005d4:	af00      	add	r7, sp, #0
+ 80005d6:	6078      	str	r0, [r7, #4]
+ 80005d8:	460b      	mov	r3, r1
+ 80005da:	70fb      	strb	r3, [r7, #3]
+    //  mode TX
+    uint8_t config = nrf_read_reg(CONFIG);
+ 80005dc:	2000      	movs	r0, #0
+ 80005de:	f7ff ff1b 	bl	8000418 <nrf_read_reg>
+ 80005e2:	4603      	mov	r3, r0
+ 80005e4:	73fb      	strb	r3, [r7, #15]
+    if (config & PRIM_RX) {
+ 80005e6:	7bfb      	ldrb	r3, [r7, #15]
+ 80005e8:	f003 0301 	and.w	r3, r3, #1
+ 80005ec:	2b00      	cmp	r3, #0
+ 80005ee:	d00d      	beq.n	800060c <nrf_transmit+0x3c>
+        NRF_CE_PORT->BRR = NRF_CE_PIN;
+ 80005f0:	4b2b      	ldr	r3, [pc, #172]	@ (80006a0 <nrf_transmit+0xd0>)
+ 80005f2:	2201      	movs	r2, #1
+ 80005f4:	615a      	str	r2, [r3, #20]
+        nrf_write_reg(CONFIG, config & ~PRIM_RX);
+ 80005f6:	7bfb      	ldrb	r3, [r7, #15]
+ 80005f8:	f023 0301 	bic.w	r3, r3, #1
+ 80005fc:	b2db      	uxtb	r3, r3
+ 80005fe:	4619      	mov	r1, r3
+ 8000600:	2000      	movs	r0, #0
+ 8000602:	f7ff fee7 	bl	80003d4 <nrf_write_reg>
+        delay_us(130);
+ 8000606:	2082      	movs	r0, #130	@ 0x82
+ 8000608:	f7ff fe3e 	bl	8000288 <delay_us>
+    }
+    
+    // clear FIFO TX
+    nrf_write_reg(FLUSH_TX, 0xFF);
+ 800060c:	21ff      	movs	r1, #255	@ 0xff
+ 800060e:	20e1      	movs	r0, #225	@ 0xe1
+ 8000610:	f7ff fee0 	bl	80003d4 <nrf_write_reg>
+    
+    // write payload
+    NRF_CSN_PORT->BRR = NRF_CSN_PIN;
+ 8000614:	4b22      	ldr	r3, [pc, #136]	@ (80006a0 <nrf_transmit+0xd0>)
+ 8000616:	2202      	movs	r2, #2
+ 8000618:	615a      	str	r2, [r3, #20]
+    spi_transfer(W_TX_PAYLOAD);
+ 800061a:	20a0      	movs	r0, #160	@ 0xa0
+ 800061c:	f7ff feba 	bl	8000394 <spi_transfer>
+    for (uint8_t i = 0; i < len; i++) {
+ 8000620:	2300      	movs	r3, #0
+ 8000622:	75fb      	strb	r3, [r7, #23]
+ 8000624:	e009      	b.n	800063a <nrf_transmit+0x6a>
+        spi_transfer(data[i]);
+ 8000626:	7dfb      	ldrb	r3, [r7, #23]
+ 8000628:	687a      	ldr	r2, [r7, #4]
+ 800062a:	4413      	add	r3, r2
+ 800062c:	781b      	ldrb	r3, [r3, #0]
+ 800062e:	4618      	mov	r0, r3
+ 8000630:	f7ff feb0 	bl	8000394 <spi_transfer>
+    for (uint8_t i = 0; i < len; i++) {
+ 8000634:	7dfb      	ldrb	r3, [r7, #23]
+ 8000636:	3301      	adds	r3, #1
+ 8000638:	75fb      	strb	r3, [r7, #23]
+ 800063a:	7dfa      	ldrb	r2, [r7, #23]
+ 800063c:	78fb      	ldrb	r3, [r7, #3]
+ 800063e:	429a      	cmp	r2, r3
+ 8000640:	d3f1      	bcc.n	8000626 <nrf_transmit+0x56>
+    }
+    NRF_CSN_PORT->BSRR = NRF_CSN_PIN;
+ 8000642:	4b17      	ldr	r3, [pc, #92]	@ (80006a0 <nrf_transmit+0xd0>)
+ 8000644:	2202      	movs	r2, #2
+ 8000646:	611a      	str	r2, [r3, #16]
+    
+    // start transmission
+    NRF_CE_PORT->BSRR = NRF_CE_PIN;
+ 8000648:	4b15      	ldr	r3, [pc, #84]	@ (80006a0 <nrf_transmit+0xd0>)
+ 800064a:	2201      	movs	r2, #1
+ 800064c:	611a      	str	r2, [r3, #16]
+    delay_us(15);
+ 800064e:	200f      	movs	r0, #15
+ 8000650:	f7ff fe1a 	bl	8000288 <delay_us>
+    NRF_CE_PORT->BRR = NRF_CE_PIN;
+ 8000654:	4b12      	ldr	r3, [pc, #72]	@ (80006a0 <nrf_transmit+0xd0>)
+ 8000656:	2201      	movs	r2, #1
+ 8000658:	615a      	str	r2, [r3, #20]
+    
+    // wait finish
+    uint8_t status;
+    uint32_t timeout = 100000;
+ 800065a:	4b12      	ldr	r3, [pc, #72]	@ (80006a4 <nrf_transmit+0xd4>)
+ 800065c:	613b      	str	r3, [r7, #16]
+    while (timeout--) {
+ 800065e:	e009      	b.n	8000674 <nrf_transmit+0xa4>
+        status = nrf_read_reg(STATUS);
+ 8000660:	2007      	movs	r0, #7
+ 8000662:	f7ff fed9 	bl	8000418 <nrf_read_reg>
+ 8000666:	4603      	mov	r3, r0
+ 8000668:	75bb      	strb	r3, [r7, #22]
+        if (status & (TX_DS | MAX_RT)) break;
+ 800066a:	7dbb      	ldrb	r3, [r7, #22]
+ 800066c:	f003 0330 	and.w	r3, r3, #48	@ 0x30
+ 8000670:	2b00      	cmp	r3, #0
+ 8000672:	d105      	bne.n	8000680 <nrf_transmit+0xb0>
+    while (timeout--) {
+ 8000674:	693b      	ldr	r3, [r7, #16]
+ 8000676:	1e5a      	subs	r2, r3, #1
+ 8000678:	613a      	str	r2, [r7, #16]
+ 800067a:	2b00      	cmp	r3, #0
+ 800067c:	d1f0      	bne.n	8000660 <nrf_transmit+0x90>
+ 800067e:	e000      	b.n	8000682 <nrf_transmit+0xb2>
+        if (status & (TX_DS | MAX_RT)) break;
+ 8000680:	bf00      	nop
+    }
+    
+    // clear interruptions
+    nrf_write_reg(STATUS, TX_DS | MAX_RT);
+ 8000682:	2130      	movs	r1, #48	@ 0x30
+ 8000684:	2007      	movs	r0, #7
+ 8000686:	f7ff fea5 	bl	80003d4 <nrf_write_reg>
+    
+    return (status & TX_DS) ? 1 : 0;
+ 800068a:	7dbb      	ldrb	r3, [r7, #22]
+ 800068c:	115b      	asrs	r3, r3, #5
+ 800068e:	b2db      	uxtb	r3, r3
+ 8000690:	f003 0301 	and.w	r3, r3, #1
+ 8000694:	b2db      	uxtb	r3, r3
+}
+ 8000696:	4618      	mov	r0, r3
+ 8000698:	3718      	adds	r7, #24
+ 800069a:	46bd      	mov	sp, r7
+ 800069c:	bd80      	pop	{r7, pc}
+ 800069e:	bf00      	nop
+ 80006a0:	40010800 	.word	0x40010800
+ 80006a4:	000186a0 	.word	0x000186a0
+
+080006a8 <nrf_set_tx_addr>:
+    return 0;
+}
+
+
+// setup transmission address
+void nrf_set_tx_addr(uint8_t *addr, uint8_t len){
+ 80006a8:	b580      	push	{r7, lr}
+ 80006aa:	b082      	sub	sp, #8
+ 80006ac:	af00      	add	r7, sp, #0
+ 80006ae:	6078      	str	r0, [r7, #4]
+ 80006b0:	460b      	mov	r3, r1
+ 80006b2:	70fb      	strb	r3, [r7, #3]
+    nrf_write_buf(TX_ADDR, addr, len);
+ 80006b4:	78fb      	ldrb	r3, [r7, #3]
+ 80006b6:	461a      	mov	r2, r3
+ 80006b8:	6879      	ldr	r1, [r7, #4]
+ 80006ba:	2010      	movs	r0, #16
+ 80006bc:	f7ff feca 	bl	8000454 <nrf_write_buf>
+}
+ 80006c0:	bf00      	nop
+ 80006c2:	3708      	adds	r7, #8
+ 80006c4:	46bd      	mov	sp, r7
+ 80006c6:	bd80      	pop	{r7, pc}
+
+080006c8 <nrf_set_rx_addr>:
+
+
+// setup reception address for a specific pipe
+void nrf_set_rx_addr(uint8_t pipe, uint8_t *addr, uint8_t len){
+ 80006c8:	b580      	push	{r7, lr}
+ 80006ca:	b082      	sub	sp, #8
+ 80006cc:	af00      	add	r7, sp, #0
+ 80006ce:	4603      	mov	r3, r0
+ 80006d0:	6039      	str	r1, [r7, #0]
+ 80006d2:	71fb      	strb	r3, [r7, #7]
+ 80006d4:	4613      	mov	r3, r2
+ 80006d6:	71bb      	strb	r3, [r7, #6]
+    if (pipe == 0) {
+ 80006d8:	79fb      	ldrb	r3, [r7, #7]
+ 80006da:	2b00      	cmp	r3, #0
+ 80006dc:	d106      	bne.n	80006ec <nrf_set_rx_addr+0x24>
+        nrf_write_buf(RX_ADDR_P0, addr, len);
+ 80006de:	79bb      	ldrb	r3, [r7, #6]
+ 80006e0:	461a      	mov	r2, r3
+ 80006e2:	6839      	ldr	r1, [r7, #0]
+ 80006e4:	200a      	movs	r0, #10
+ 80006e6:	f7ff feb5 	bl	8000454 <nrf_write_buf>
+        nrf_write_buf(RX_ADDR_P1, addr, len);
+    } else {
+        // pipes 2-5 use only the LSB
+        nrf_write_reg(RX_ADDR_P0 + pipe, addr[0]);
+    }
+}
+ 80006ea:	e012      	b.n	8000712 <nrf_set_rx_addr+0x4a>
+    } else if (pipe == 1) {
+ 80006ec:	79fb      	ldrb	r3, [r7, #7]
+ 80006ee:	2b01      	cmp	r3, #1
+ 80006f0:	d106      	bne.n	8000700 <nrf_set_rx_addr+0x38>
+        nrf_write_buf(RX_ADDR_P1, addr, len);
+ 80006f2:	79bb      	ldrb	r3, [r7, #6]
+ 80006f4:	461a      	mov	r2, r3
+ 80006f6:	6839      	ldr	r1, [r7, #0]
+ 80006f8:	200b      	movs	r0, #11
+ 80006fa:	f7ff feab 	bl	8000454 <nrf_write_buf>
+}
+ 80006fe:	e008      	b.n	8000712 <nrf_set_rx_addr+0x4a>
+        nrf_write_reg(RX_ADDR_P0 + pipe, addr[0]);
+ 8000700:	79fb      	ldrb	r3, [r7, #7]
+ 8000702:	330a      	adds	r3, #10
+ 8000704:	b2da      	uxtb	r2, r3
+ 8000706:	683b      	ldr	r3, [r7, #0]
+ 8000708:	781b      	ldrb	r3, [r3, #0]
+ 800070a:	4619      	mov	r1, r3
+ 800070c:	4610      	mov	r0, r2
+ 800070e:	f7ff fe61 	bl	80003d4 <nrf_write_reg>
+}
+ 8000712:	bf00      	nop
+ 8000714:	3708      	adds	r7, #8
+ 8000716:	46bd      	mov	sp, r7
+ 8000718:	bd80      	pop	{r7, pc}
+	...
+
+0800071c <Reset_Handler>:
+
+  .section .text.Reset_Handler
+  .weak Reset_Handler
+  .type Reset_Handler, %function
+Reset_Handler:
+  ldr   r0, =_estack
+ 800071c:	480d      	ldr	r0, [pc, #52]	@ (8000754 <LoopForever+0x2>)
+  mov   sp, r0          /* set stack pointer */
+ 800071e:	4685      	mov	sp, r0
+/* Call the clock system initialization function.*/
+  bl  SystemInit
+ 8000720:	f3af 8000 	nop.w
+
+/* Copy the data segment initializers from flash to SRAM */
+  ldr r0, =_sdata
+ 8000724:	480c      	ldr	r0, [pc, #48]	@ (8000758 <LoopForever+0x6>)
+  ldr r1, =_edata
+ 8000726:	490d      	ldr	r1, [pc, #52]	@ (800075c <LoopForever+0xa>)
+  ldr r2, =_sidata
+ 8000728:	4a0d      	ldr	r2, [pc, #52]	@ (8000760 <LoopForever+0xe>)
+  movs r3, #0
+ 800072a:	2300      	movs	r3, #0
+  b LoopCopyDataInit
+ 800072c:	e002      	b.n	8000734 <LoopCopyDataInit>
+
+0800072e <CopyDataInit>:
+
+CopyDataInit:
+  ldr r4, [r2, r3]
+ 800072e:	58d4      	ldr	r4, [r2, r3]
+  str r4, [r0, r3]
+ 8000730:	50c4      	str	r4, [r0, r3]
+  adds r3, r3, #4
+ 8000732:	3304      	adds	r3, #4
+
+08000734 <LoopCopyDataInit>:
+
+LoopCopyDataInit:
+  adds r4, r0, r3
+ 8000734:	18c4      	adds	r4, r0, r3
+  cmp r4, r1
+ 8000736:	428c      	cmp	r4, r1
+  bcc CopyDataInit
+ 8000738:	d3f9      	bcc.n	800072e <CopyDataInit>
+
+/* Zero fill the bss segment. */
+  ldr r2, =_sbss
+ 800073a:	4a0a      	ldr	r2, [pc, #40]	@ (8000764 <LoopForever+0x12>)
+  ldr r4, =_ebss
+ 800073c:	4c0a      	ldr	r4, [pc, #40]	@ (8000768 <LoopForever+0x16>)
+  movs r3, #0
+ 800073e:	2300      	movs	r3, #0
+  b LoopFillZerobss
+ 8000740:	e001      	b.n	8000746 <LoopFillZerobss>
+
+08000742 <FillZerobss>:
+
+FillZerobss:
+  str  r3, [r2]
+ 8000742:	6013      	str	r3, [r2, #0]
+  adds r2, r2, #4
+ 8000744:	3204      	adds	r2, #4
+
+08000746 <LoopFillZerobss>:
+
+LoopFillZerobss:
+  cmp r2, r4
+ 8000746:	42a2      	cmp	r2, r4
+  bcc FillZerobss
+ 8000748:	d3fb      	bcc.n	8000742 <FillZerobss>
+
+/* Call static constructors */
+  bl __libc_init_array
+ 800074a:	f000 f811 	bl	8000770 <__libc_init_array>
+/* Call the application's entry point.*/
+  bl main
+ 800074e:	f7ff fd2f 	bl	80001b0 <main>
+
+08000752 <LoopForever>:
+
+LoopForever:
+  b LoopForever
+ 8000752:	e7fe      	b.n	8000752 <LoopForever>
+  ldr   r0, =_estack
+ 8000754:	20005000 	.word	0x20005000
+  ldr r0, =_sdata
+ 8000758:	20000000 	.word	0x20000000
+  ldr r1, =_edata
+ 800075c:	20000000 	.word	0x20000000
+  ldr r2, =_sidata
+ 8000760:	080007e8 	.word	0x080007e8
+  ldr r2, =_sbss
+ 8000764:	20000000 	.word	0x20000000
+  ldr r4, =_ebss
+ 8000768:	2000001c 	.word	0x2000001c
+
+0800076c <ADC1_2_IRQHandler>:
+ * @retval : None
+*/
+  .section .text.Default_Handler,"ax",%progbits
+Default_Handler:
+Infinite_Loop:
+  b Infinite_Loop
+ 800076c:	e7fe      	b.n	800076c <ADC1_2_IRQHandler>
+	...
+
+08000770 <__libc_init_array>:
+ 8000770:	b570      	push	{r4, r5, r6, lr}
+ 8000772:	2600      	movs	r6, #0
+ 8000774:	4d0c      	ldr	r5, [pc, #48]	@ (80007a8 <__libc_init_array+0x38>)
+ 8000776:	4c0d      	ldr	r4, [pc, #52]	@ (80007ac <__libc_init_array+0x3c>)
+ 8000778:	1b64      	subs	r4, r4, r5
+ 800077a:	10a4      	asrs	r4, r4, #2
+ 800077c:	42a6      	cmp	r6, r4
+ 800077e:	d109      	bne.n	8000794 <__libc_init_array+0x24>
+ 8000780:	f000 f81a 	bl	80007b8 <_init>
+ 8000784:	2600      	movs	r6, #0
+ 8000786:	4d0a      	ldr	r5, [pc, #40]	@ (80007b0 <__libc_init_array+0x40>)
+ 8000788:	4c0a      	ldr	r4, [pc, #40]	@ (80007b4 <__libc_init_array+0x44>)
+ 800078a:	1b64      	subs	r4, r4, r5
+ 800078c:	10a4      	asrs	r4, r4, #2
+ 800078e:	42a6      	cmp	r6, r4
+ 8000790:	d105      	bne.n	800079e <__libc_init_array+0x2e>
+ 8000792:	bd70      	pop	{r4, r5, r6, pc}
+ 8000794:	f855 3b04 	ldr.w	r3, [r5], #4
+ 8000798:	4798      	blx	r3
+ 800079a:	3601      	adds	r6, #1
+ 800079c:	e7ee      	b.n	800077c <__libc_init_array+0xc>
+ 800079e:	f855 3b04 	ldr.w	r3, [r5], #4
+ 80007a2:	4798      	blx	r3
+ 80007a4:	3601      	adds	r6, #1
+ 80007a6:	e7f2      	b.n	800078e <__libc_init_array+0x1e>
+ 80007a8:	080007e0 	.word	0x080007e0
+ 80007ac:	080007e0 	.word	0x080007e0
+ 80007b0:	080007e0 	.word	0x080007e0
+ 80007b4:	080007e4 	.word	0x080007e4
+
+080007b8 <_init>:
+ 80007b8:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80007ba:	bf00      	nop
+ 80007bc:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80007be:	bc08      	pop	{r3}
+ 80007c0:	469e      	mov	lr, r3
+ 80007c2:	4770      	bx	lr
+
+080007c4 <_fini>:
+ 80007c4:	b5f8      	push	{r3, r4, r5, r6, r7, lr}
+ 80007c6:	bf00      	nop
+ 80007c8:	bcf8      	pop	{r3, r4, r5, r6, r7}
+ 80007ca:	bc08      	pop	{r3}
+ 80007cc:	469e      	mov	lr, r3
+ 80007ce:	4770      	bx	lr

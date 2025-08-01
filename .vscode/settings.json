@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "nrfl2401.h": "c",
+        "uart.h": "c"
+    }
+}
