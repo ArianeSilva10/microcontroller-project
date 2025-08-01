@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "ldr.h"
+#include "aht20.h"
 
 void SystemClock_Config(void)
 {
@@ -265,6 +266,15 @@ int main(void)
     spi_init();
     ADC_init();
     LED_init();
+    char buffer[100];
+
+    GPIO_Init_ht20();
+    I2C1_Init();
+
+    // Inicialização do sensor
+    uint8_t init_cmd[3] = {0xBE, 0x08, 0x00};
+    AHT20_WriteCmd(init_cmd, 3);
+    delay_ms(50);
 
     delay_ms(1000);
     printf("\n*** TESTE NRF24L01 ***\r\n");
@@ -299,7 +309,26 @@ int main(void)
             GPIOB->ODR &= ~(1 << 9);
         }
 
+        // Envia comando de medição
+        uint8_t meas_cmd[3] = {0xAC, 0x33, 0x00};
+        AHT20_WriteCmd(meas_cmd, 3);
+        delay_ms(80);
+
+        // Lê 7 bytes de dados
+        AHT20_ReadData(data, 7);
+
+        // Converte dados para temperatura e umidade
+        AHT20_ConvertData(data, &temperature, &humidity);
+
+        // Envia via USART
+        int len = snprintf(buffer, sizeof(buffer), "Temp: %.2f C, Hum: %.2f %%\r\n", temperature, humidity);
+        printf(buffer);
+
+        delay_ms(2000);
+
         for (volatile int i = 0; i < 100000; i++)
             ; // delay
+
+
     }
 }

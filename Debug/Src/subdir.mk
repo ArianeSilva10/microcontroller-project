@@ -5,6 +5,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../Src/aht20.c \
 ../Src/ldr.c \
 ../Src/main.c \
 ../Src/nrfl2401.c \
@@ -13,6 +14,7 @@ C_SRCS += \
 ../Src/uart.c 
 
 OBJS += \
+./Src/aht20.o \
 ./Src/ldr.o \
 ./Src/main.o \
 ./Src/nrfl2401.o \
@@ -21,6 +23,7 @@ OBJS += \
 ./Src/uart.o 
 
 C_DEPS += \
+./Src/aht20.d \
 ./Src/ldr.d \
 ./Src/main.d \
 ./Src/nrfl2401.d \
@@ -36,7 +39,7 @@ Src/%.o Src/%.su Src/%.cyclo: ../Src/%.c Src/subdir.mk
 clean: clean-Src
 
 clean-Src:
-	-$(RM) ./Src/ldr.cyclo ./Src/ldr.d ./Src/ldr.o ./Src/ldr.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/nrfl2401.cyclo ./Src/nrfl2401.d ./Src/nrfl2401.o ./Src/nrfl2401.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/uart.cyclo ./Src/uart.d ./Src/uart.o ./Src/uart.su
+	-$(RM) ./Src/aht20.cyclo ./Src/aht20.d ./Src/aht20.o ./Src/aht20.su ./Src/ldr.cyclo ./Src/ldr.d ./Src/ldr.o ./Src/ldr.su ./Src/main.cyclo ./Src/main.d ./Src/main.o ./Src/main.su ./Src/nrfl2401.cyclo ./Src/nrfl2401.d ./Src/nrfl2401.o ./Src/nrfl2401.su ./Src/syscalls.cyclo ./Src/syscalls.d ./Src/syscalls.o ./Src/syscalls.su ./Src/sysmem.cyclo ./Src/sysmem.d ./Src/sysmem.o ./Src/sysmem.su ./Src/uart.cyclo ./Src/uart.d ./Src/uart.o ./Src/uart.su
 
 .PHONY: clean-Src
 

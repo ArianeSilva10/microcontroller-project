@@ -1,3 +1,4 @@
+"./Src/aht20.o"
 "./Src/ldr.o"
 "./Src/main.o"
 "./Src/nrfl2401.o"
